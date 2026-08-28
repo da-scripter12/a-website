@@ -1,6 +1,13 @@
 {
+  "name": "a-website",
+  "version": "1.0.0",
+  "description": "My website",
+  "main": "backend.js",
+  "scripts": {
+    "start": "node backend.js"
+  },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
-    "express": "^5.2.1"
+    "express": "^5.1.0",
+    "better-sqlite3": "^12.4.1"
   }
 }
