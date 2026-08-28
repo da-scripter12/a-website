@@ -1,0 +1,13 @@
+{
+  "name": "a-website",
+  "version": "1.0.0",
+  "description": "My website",
+  "main": "backend.js",
+  "scripts": {
+    "start": "node backend.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "better-sqlite3": "^12.4.1"
+  }
+}
