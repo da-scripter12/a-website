@@ -1,0 +1,28 @@
+#index {
+    align-items: center;
+    font-family: 'comic sans ms';
+}
+
+.sign-up {
+    border: 2px solid black;
+    border-radius: 15px;
+    padding: 20px
+}
+
+input {
+    border-radius: 50px;
+    padding: 30px;
+    border: 1px solid black
+}
+
+button {
+    border-radius: 50px;
+    padding: 10px;
+    border: 2px solid black
+}
+
+.welcome{
+    color:blue;
+    font-family:'comic sans MS';
+    align-self : center
+}
