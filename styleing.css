@@ -1,4 +1,9 @@
 #index {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
     font-family: 'comic sans ms';
     text-align: center;
 }
@@ -20,4 +25,38 @@ button {
     color: blue;
     font-family: 'comic sans MS';
     align-items: center;
+}
+
+.bharatbot-link {
+    display: inline-block;
+    position: fixed;
+    top: 50%;
+    left: 24px;
+    padding: 12px 22px;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background:
+        linear-gradient(white, white) padding-box,
+        linear-gradient(90deg, #ff9933, #ffffff, #138808) border-box;
+    color: #172033;
+    font-family: Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bharatbot-link:hover,
+.bharatbot-link:focus-visible {
+    transform: translateY(calc(-50% - 2px));
+    box-shadow: 0 6px 14px rgb(19 136 8 / 22%);
+}
+
+@media (max-width: 520px) {
+    .bharatbot-link {
+        left: 12px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
 }

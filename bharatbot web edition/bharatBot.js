@@ -1,6 +1,3 @@
-const natural = require("natural");
-const LogisticRegression = require("ml-logistic-regression");
-
 
 // ==============================================================================
 // 1. DATASET
@@ -382,6 +379,17 @@ const responses = {
     ]
 };
 
+
+/*
+// The old Node-only classifier is kept here as a reference.
+//getting text
+const input = document.getElementById("input");
+
+input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter"){
+        let prompt = input.value;
+    }
+});
 // ============================================================
 // TF-IDF
 // ============================================================
@@ -464,3 +472,111 @@ function classify(question) {
 module.exports = {
     classify
 };
+*/
+
+// ============================================================================
+// 4. BROWSER CHAT LOGIC
+// ============================================================================
+
+// The original classifier used Node packages, so it could not run in a normal
+// browser. This lightweight matcher compares the user's words with the
+// training questions above and returns the response for the closest category.
+const stopWords = new Set([
+    "a", "an", "am", "are", "about", "be", "been", "by", "did", "do",
+    "does", "for", "from", "has", "have", "how", "i", "in", "is", "it",
+    "me", "my", "of", "on", "or", "tell", "that", "the", "this", "to",
+    "was", "were", "what", "when", "where", "who", "why", "with", "you"
+]);
+
+function tokenize(text) {
+    return new Set(
+        text
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, " ")
+            .split(/\s+/)
+            .filter((word) => word.length > 1 && !stopWords.has(word))
+    );
+}
+
+function similarity(questionWords, sentence) {
+    const sentenceWords = tokenize(sentence);
+    let matchingWords = 0;
+
+    questionWords.forEach((word) => {
+        if (sentenceWords.has(word)) {
+            matchingWords += 1;
+        }
+    });
+
+    const questionText = [...questionWords].join(" ");
+    const phraseBonus = sentence.toLowerCase().includes(questionText) ? 3 : 0;
+
+    return matchingWords / Math.max(questionWords.size, sentenceWords.size) + phraseBonus;
+}
+
+function classify(question) {
+    const questionWords = tokenize(question);
+
+    if (questionWords.size === 0) {
+        return null;
+    }
+
+    let bestIndex = -1;
+    let bestScore = 0;
+
+    training_sentences.forEach((sentence, index) => {
+        const score = similarity(questionWords, sentence);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestIndex = index;
+        }
+    });
+
+    // Do not make up an answer when the question is unrelated to the data.
+    if (bestIndex === -1 || bestScore < 0.18) {
+        return null;
+    }
+
+    return training_labels[bestIndex];
+}
+
+function getResponse(question) {
+    const category = classify(question);
+
+    if (category === null) {
+        return "I do not have that answer yet. Please ask me about India's history, freedom fighters, national symbols, or independence.";
+    }
+
+    const categoryResponses = responses[category];
+    return categoryResponses[Math.floor(Math.random() * categoryResponses.length)];
+}
+
+function addMessage(text, sender) {
+    const messages = document.getElementById("messages");
+    const message = document.createElement("div");
+    message.className = `message ${sender}`;
+    message.textContent = text;
+    messages.appendChild(message);
+    messages.scrollTop = messages.scrollHeight;
+}
+
+const chatForm = document.getElementById("chat-form");
+const input = document.getElementById("input");
+
+if (chatForm && input) {
+    chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const question = input.value.trim();
+
+        if (!question) {
+            input.focus();
+            return;
+        }
+
+        addMessage(question, "user-message");
+        addMessage(getResponse(question), "bot-message");
+        input.value = "";
+        input.focus();
+    });
+}

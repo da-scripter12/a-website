@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BharatBot for the Web</title>
+        <link rel="stylesheet" href="bharat.style.css">
+    </head>
+    <body>
+        <main class="chat-card">
+            <header class="chat-header">
+                <p class="eyebrow">🇮🇳 Your history guide</p>
+        <h1 id="title"> 🇮🇳 BharatBot</h1>
+            </header>
+
+        <section id="messages" class="messages" aria-live="polite">
+            <div class="message bot-message">Namaste! Ask me a question about India's history.</div>
+        </section>
+
+        <form id="chat-form" class="chat-form">
+            <label class="sr-only" for="input">Your question</label>
+            <input type="text" id="input" autocomplete="off"
+                placeholder="For example: Who was Mahatma Gandhi?">
+            <button type="submit">Ask</button>
+        </form>
+        </main>
+
+        <script src="bharatBot.js" defer></script>
+    </body>
+</html>
