@@ -29,14 +29,18 @@ db.prepare(`
 // Receive registration
 app.post("/register", (req, res) => {
 
-    const username = req.body.username;
-    const email = req.body.email;
+    const { username, email, password } = req.body;
+
+    // Reject empty fields
+    if (!username || !email || !password) {
+        return res.status(400).send("Please fill in all fields.");
+    }
 
     // Save to SQL
     db.prepare(`
-        INSERT INTO users (username, email)
-        VALUES (?, ?)
-    `).run(username, email);
+        INSERT INTO users (username, email, password)
+        VALUES (?, ?, ?)
+    `).run(username, email, password);
 
     console.log("Registered:", username, email);
 
