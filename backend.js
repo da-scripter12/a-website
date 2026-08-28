@@ -27,26 +27,33 @@ db.prepare(`
 `).run();
 
 // Receive registration
-app.post("/register", (req, res) => {
+app.post("/signup", (req, res) => {
+    const { username, password } = req.body;
 
-    const username = req.body.username;
-    const email = req.body.email;
-    const password = req.body.password;
+    // Check if username already exists
+    const existingUser = bdb
+        .prepare("SELECT id FROM users WHERE username = ?")
+        .get(username);
 
-    if (!username || !email || !password) {
-        return res.status(400).send("Please fill in all fields.");
+    if (existingUser) {
+        return res.json({
+            success: false,
+            message: "Username already exists!"
+        });
     }
 
-    db.prepare(`
-        INSERT INTO users (username, email, password)
-        VALUES (?, ?, ?)
-    `).run(username, email, password);
+    // Create the account
+    bdb.prepare(
+        "INSERT INTO users (username, password) VALUES (?, ?)"
+    ).run(username, password);
 
-    console.log("Registered:", username, email);
+    // Log them in immediately
+    req.session.username = username;
 
-
+    res.json({
+        success: true
+    });
 });
-
 const bdb = new Database("bharatbot.db");
 
 bdb.prepare(`
