@@ -1,2 +1,3 @@
 users.db
-node_modulesgit add .gitignor
+node_modules
+notes.txt
