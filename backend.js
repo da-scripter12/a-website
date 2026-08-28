@@ -27,7 +27,7 @@ db.prepare(`
 `).run();
 
 // Receive registration
-app.post("/signup", (req, res) => {
+app.post("/register", (req, res) => {
     const { username, password } = req.body;
 
     // Check if username already exists
