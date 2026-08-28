@@ -5,7 +5,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
     const formData = new FormData(e.target);
 
-    const response = await fetch("/signup", {
+    const response = await fetch("/register", {
         method: "POST",
         body: formData
     });

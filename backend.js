@@ -4,7 +4,7 @@ const Database = require("better-sqlite3");
 
 const app = express();
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/sign_up.html");
+    res.sendFile(__dirname + "/index.html");
 });
 
 // Allow Express to read form data
@@ -27,7 +27,7 @@ db.prepare(`
 `).run();
 
 // Receive registration
-app.post("/signup", (req, res) => {
+app.post("/register", (req, res) => {
     const { username, password } = req.body;
 
     // Check if username already exists
