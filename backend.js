@@ -44,7 +44,7 @@ app.post("/register", (req, res) => {
 
     console.log("Registered:", username, email);
 
-    res.send(`welcome to my website ${username}`);
+
 });
 
 const bdb = new Database("bharatbot.db");

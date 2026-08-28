@@ -1,3 +1,5 @@
+const { text } = require("express");
+
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
     e.preventDefault(); // this prevents page refresh
 
@@ -23,4 +25,6 @@ form.addEventListener("submit", function () {
 
 const username = localStorage.getItem("username");
 
-document.getElementById("welcome").textContent = `WELCOME TO MY WEBPAGE ${username}`;
+const greet_text = "<h1>WELCOME TO MY WEBPAGE ${username} </h1>"
+
+document.getElementById("welcome").textContent = greet_text;
