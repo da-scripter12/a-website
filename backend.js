@@ -44,7 +44,7 @@ app.post("/register", (req, res) => {
 
     console.log("Registered:", username, email);
 
-    res.send("Registered successfully!");
+    res.send(`welcome ${username});
 });
 
 // Start server
