@@ -96,6 +96,7 @@ h1 {
     flex: 1;
     padding: 13px 15px;
     border: 1px solid #fdba74;
+    background-color: green;
     border-radius: 10px;
     outline: none;
     font: inherit;
