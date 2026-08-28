@@ -46,6 +46,17 @@ app.post("/register", (req, res) => {
 
     res.send(`welcome to my website ${username}`);
 });
+
+const bdb = new Database("bharatbot.db");
+
+bdb.prepare(`
+    CREATE TABLE IF NOT EXISTS training_data (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        question TEXT NOT NULL,
+        category TEXT NOT NULL,
+        response TEXT NOT NULL
+    )
+`).run();
 // Start server
 const PORT = process.env.PORT || 3000;
 
