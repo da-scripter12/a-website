@@ -1,6 +1,5 @@
 // this is node 
 const express = require("express");
-const Database = require("better-sqlite3");
 const path = require("path");
 const dotenv = require("dotenv");
 const { GoogleGenAI } = require("@google/genai");
