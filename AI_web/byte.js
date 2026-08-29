@@ -88,3 +88,4 @@ form.addEventListener("submit", async (event) => {
 
         addMessage("ai", "Couldn't connect to ByteLabs: " + error.message);
     }
+});
