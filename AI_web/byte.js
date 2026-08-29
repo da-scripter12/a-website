@@ -42,7 +42,7 @@ form.addEventListener("submit", async (event) => {
     }
 
     try {
-        const result = await fetch("/ask", {
+        const result = await fetch("/AI_web/ask", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
