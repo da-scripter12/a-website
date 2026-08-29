@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Game with Score</title>
+</head>
+<body>
+    <h1>Quiz Time!</h1>
+    <p id="question"></p>
+
+    <button onclick="checkAnswer(this.textContent)">A. Paris</button>
+    <button onclick="checkAnswer(this.textContent)">B. London</button>
+    <button onclick="checkAnswer(this.textContent)">C. Berlin</button>
+
+    <p id="result"></p>
+    <p>Score: <span id="score">0</span></p>
+
+    <script>
+        // List of questions and answers
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                answer: "Paris",
+                options: ["Paris", "London", "Berlin"]
+            },
+            {
+                question: "What is 5 + 3?",
+                answer: "8"  ,
+                options: ["6", "8", "10"]
+            },
+            {
+                question: "What color is the sky?",
+                answer: "Blue"  ,
+                options: ["Blue", "Green", "Red"]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            // Load current question
+            document.getElementById("question").textContent = questions[currentQuestion].question;
+
+            // Load the options
+            const buttons = document.querySelectorAll("button");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].textContent = questions[currentQuestion].options[i];
+                buttons[i].disabled = false;
+            }
+        }
+
+        function checkAnswer(answer) {
+            let result = document.getElementById("result");
+
+            // Normalize both the user's answer and correct answer for case insensitivity and trimming extra spaces
+            if (answer.trim().toLowerCase() === questions[currentQuestion].answer.trim().toLowerCase()) {
+                result.textContent = "✅ Correct!";
+                score++;
+            } else {
+                result.textContent = "❌ Wrong. Try again!";
+            }
+
+            // Update the score
+            document.getElementById("score").textContent = score;
+
+            // Prevent multiple answers for the same question during the transition
+            document.querySelectorAll("button").forEach(button => button.disabled = true);
+
+            // Move to the next question or end quiz
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                setTimeout(loadQuestion, 1000); // Load next question after 1 second
+            } else {
+                setTimeout(endQuiz, 1000); // End quiz after last question
+            }
+        }
+
+        function endQuiz() {
+            document.getElementById("question").textContent = "Quiz Over!";
+            document.getElementById("result").textContent = `Your final score is: ${score}`;
+            // Disable buttons
+            const buttons = document.querySelectorAll("button");
+            buttons.forEach(button => button.disabled = true);
+        }
+
+        // Load the first question
+        loadQuestion();
+    </script>
+</body>
+</html>

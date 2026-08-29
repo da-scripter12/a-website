@@ -48,6 +48,30 @@ button {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.quizgame-link {
+    display: inline-block;
+    position: fixed;
+    top: 10%;
+    left: 230px;
+    padding: 12px 22px;
+    border: 3px solid #172033;
+    border-radius: 999px;
+    background: #172033;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quizgame-link:hover,
+.quizgame-link:focus-visible {
+    transform: translateY(calc(-50% - 2px));
+    box-shadow: 0 6px 14px rgb(23 32 51 / 25%);
+}
+
 .bharatbot-link:hover,
 .bharatbot-link:focus-visible {
     transform: translateY(calc(-50% - 2px));
@@ -57,6 +81,12 @@ button {
 @media (max-width: 520px) {
     .bharatbot-link {
         left: 12px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+    }
+
+    .quizgame-link {
+        left: 190px;
         padding: 10px 16px;
         font-size: 0.95rem;
     }
