@@ -38,7 +38,7 @@ const ai = new GoogleGenAI({
 
 app.use("/AI_web", express.static(path.join(__dirname, "bytelabs")));
 
-app.post("/bytelabs/ask", async (req, res) => {
+app.post("/AI_web/ask", async (req, res) => {
     try {
         const message = req.body.message;
 
