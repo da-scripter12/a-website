@@ -61,7 +61,7 @@ app.post("/bytelabs/ask", async (req, res) => {
         console.error("Gemini error:", error);
 
         res.status(500).json({
-            error: "ByteLabs couldn't get a response from Gemini."
+            error: error.message
         });
     }
 });
