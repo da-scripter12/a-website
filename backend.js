@@ -1,8 +1,15 @@
 // this is node 
 const express = require("express");
 const Database = require("better-sqlite3");
+const path = require("path");
+const dotenv = require("dotenv");
+const { GoogleGenAI } = require("@google/genai");
+
+dotenv.config();
 
 const app = express();
+
+// Main website
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
@@ -10,6 +17,9 @@ app.get("/", (req, res) => {
 // Serve your HTML, CSS and frontend JS
 app.use(express.static(__dirname));
 
+app.use(express.json());
+
+// BharatBot database
 const bdb = new Database("bharatbot.db");
 
 bdb.prepare(`
@@ -20,6 +30,42 @@ bdb.prepare(`
         response TEXT NOT NULL
     )
 `).run();
+
+// ByteLabs
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY
+});
+
+app.use("/AI_web", express.static(path.join(__dirname, "bytelabs")));
+
+app.post("/bytelabs/ask", async (req, res) => {
+    try {
+        const message = req.body.message;
+
+        if (!message) {
+            return res.status(400).json({
+                error: "No message provided."
+            });
+        }
+
+        const response = await ai.models.generateContent({
+            model: "gemini-3.6-flash",
+            contents: message
+        });
+
+        res.json({
+            response: response.text
+        });
+
+    } catch (error) {
+        console.error("Gemini error:", error);
+
+        res.status(500).json({
+            error: "ByteLabs couldn't get a response from Gemini."
+        });
+    }
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
 

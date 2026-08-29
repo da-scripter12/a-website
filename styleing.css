@@ -91,3 +91,23 @@ button {
         font-size: 0.95rem;
     }
 }
+.AI.link {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 10px;
+
+    background: #222;
+    color: white;
+
+    text-decoration: none;
+    border-radius: 10px;
+
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.AI.link:hover {
+    transform: scale(1.05);
+}
