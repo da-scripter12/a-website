@@ -35,10 +35,41 @@ app.post("/AI_web/ask", async (req, res) => {
             });
         }
 
-        const response = await ai.models.generateContent({
-            model: "gemini-3.7-flash",
-            contents: message
-        });
+        let response;
+
+        // Try up to 3 times
+        for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+                response = await ai.models.generateContent({
+                    model: "gemini-3.7-flash",
+                    contents: message
+                });
+
+                break; // Success
+            } catch (error) {
+                console.error(`Gemini attempt ${attempt} failed:`, error);
+
+                const errorText = JSON.stringify(error);
+
+                // Only retry temporary/unavailable errors
+                if (
+                    !errorText.includes("503") &&
+                    !errorText.includes("UNAVAILABLE")
+                ) {
+                    throw error;
+                }
+
+                // If this was the final attempt, stop
+                if (attempt === 3) {
+                    return res.status(503).json({
+                        error: "ByteLabs is temporarily busy. Please try again in a few seconds."
+                    });
+                }
+
+                // Wait 2 seconds, then try again
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        }
 
         res.json({
             response: response.text
