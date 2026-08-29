@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ByteLabs AI</title>
+
+    <link rel="stylesheet" href="byte-style.css">
+</head>
+
+<body>
+
+    <header id="top-bar">
+        <h1 id="logo">ByteLabs</h1>
+
+        <div id="powered-by">
+            <span>Powered by Gemini</span>
+        </div>
+    </header>
+
+    <main id="chat-container">
+
+        <!-- Messages will appear here -->
+        <div id="chat"></div>
+
+        <!-- Welcome screen -->
+        <div id="welcome">
+            <h2>What can I help you with?</h2>
+        </div>
+
+    </main>
+
+    <form id="prompt-form">
+
+        <input
+            type="text"
+            id="prompt"
+            placeholder="Message ByteLabs..."
+            autocomplete="off"
+        >
+
+        <button type="submit" id="send-button">
+            ↑
+        </button>
+
+    </form>
+
+    <script src="byte.js"></script>
+
+</body>
+
+</html>
