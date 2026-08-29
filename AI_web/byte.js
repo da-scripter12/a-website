@@ -84,9 +84,7 @@ form.addEventListener("submit", async (event) => {
             lastMessage.remove();
         }
 
-        addMessage("ai", "Couldn't connect to ByteLabs.");
-    }
+        console.error("ByteLabs connection error:", error);
 
-    input.disabled = false;
-    input.focus();
-});
+        addMessage("ai", "Couldn't connect to ByteLabs: " + error.message);
+    }
