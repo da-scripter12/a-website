@@ -18,18 +18,6 @@ app.use(express.static(__dirname));
 
 app.use(express.json());
 
-// BharatBot database
-const bdb = new Database("bharatbot.db");
-
-bdb.prepare(`
-    CREATE TABLE IF NOT EXISTS training_data (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        question TEXT NOT NULL,
-        category TEXT NOT NULL,
-        response TEXT NOT NULL
-    )
-`).run();
-
 // ByteLabs
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
