@@ -38,7 +38,6 @@ form.addEventListener("submit", async (event) => {
         welcome.style.display = "none";
     }
 
-    // Show that ByteLabs is actually doing something
     addMessage("ai", "Thinking...");
 
     try {
@@ -52,9 +51,20 @@ form.addEventListener("submit", async (event) => {
             })
         });
 
-        const data = await result.json();
+        // Get the response as text first
+        const rawText = await result.text();
 
-        // Remove "Thinking..."
+        let data;
+
+        try {
+            data = JSON.parse(rawText);
+        } catch {
+            throw new Error(
+                `Server returned invalid response (${result.status})`
+            );
+        }
+
+        // Remove Thinking...
         const messages = chat.querySelectorAll(".message");
         const lastMessage = messages[messages.length - 1];
 
@@ -69,10 +79,15 @@ form.addEventListener("submit", async (event) => {
         if (data.response) {
             addMessage("ai", data.response);
         } else {
-            addMessage("ai", "ByteLabs error: " + (data.error || "Unknown error"));
+            addMessage(
+                "ai",
+                "ByteLabs error: " + (data.error || `Server error ${result.status}`)
+            );
         }
 
     } catch (error) {
+        console.error("ByteLabs error:", error);
+
         const messages = chat.querySelectorAll(".message");
         const lastMessage = messages[messages.length - 1];
 
@@ -84,8 +99,11 @@ form.addEventListener("submit", async (event) => {
             lastMessage.remove();
         }
 
-        console.error("ByteLabs connection error:", error);
-
         addMessage("ai", "Couldn't connect to ByteLabs: " + error.message);
+
+    } finally {
+        console.log("FINALLY RAN");
+        input.disabled = false;
+        input.focus();
     }
 });
