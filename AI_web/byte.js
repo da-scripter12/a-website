@@ -5,7 +5,6 @@ const welcome = document.getElementById("welcome");
 
 function addMessage(sender, text) {
     const message = document.createElement("div");
-
     message.className = `message ${sender}`;
 
     const name = document.createElement("div");
@@ -18,7 +17,6 @@ function addMessage(sender, text) {
 
     message.appendChild(name);
     message.appendChild(content);
-
     chat.appendChild(message);
 
     chat.scrollTop = chat.scrollHeight;
@@ -31,7 +29,6 @@ form.addEventListener("submit", async (event) => {
 
     if (!message) return;
 
-    // Immediately display what YOU typed
     addMessage("user", message);
 
     input.value = "";
@@ -40,6 +37,9 @@ form.addEventListener("submit", async (event) => {
     if (welcome) {
         welcome.style.display = "none";
     }
+
+    // Show that ByteLabs is actually doing something
+    addMessage("ai", "Thinking...");
 
     try {
         const result = await fetch("/AI_web/ask", {
@@ -52,31 +52,38 @@ form.addEventListener("submit", async (event) => {
             })
         });
 
-        const text = await result.text();
+        const data = await result.json();
 
-        console.log("STATUS:", result.status);
-        console.log("SERVER RESPONSE:", text);
+        // Remove "Thinking..."
+        const messages = chat.querySelectorAll(".message");
+        const lastMessage = messages[messages.length - 1];
 
-        console.log("SERVER RESPONSE:", text);
-
-        let data;
-
-        try {
-            data = JSON.parse(text);
-        } catch (error) {
-            console.error("Server did not return JSON:", text);
-            addMessage("ai", "Server returned an invalid response.");
-            return;
+        if (
+            lastMessage &&
+            lastMessage.classList.contains("ai") &&
+            lastMessage.querySelector(".message-content")?.textContent === "Thinking..."
+        ) {
+            lastMessage.remove();
         }
 
         if (data.response) {
             addMessage("ai", data.response);
         } else {
-            addMessage("ai", data.error || "No response received.");
+            addMessage("ai", "ByteLabs error: " + (data.error || "Unknown error"));
         }
 
     } catch (error) {
-        console.error(error);
+        const messages = chat.querySelectorAll(".message");
+        const lastMessage = messages[messages.length - 1];
+
+        if (
+            lastMessage &&
+            lastMessage.classList.contains("ai") &&
+            lastMessage.querySelector(".message-content")?.textContent === "Thinking..."
+        ) {
+            lastMessage.remove();
+        }
+
         addMessage("ai", "Couldn't connect to ByteLabs.");
     }
 
