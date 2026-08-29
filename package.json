@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "My website",
   "main": "backend.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "node backend.js"
   },
   "dependencies": {
     "@google/genai": "^2.19.0",
-    "better-sqlite3": "^12.11.1",
+    "better-sqlite3": "^13.0.3",
     "dotenv": "^17.4.2",
     "express": "^5.1.0"
   },
