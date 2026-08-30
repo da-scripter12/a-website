@@ -85,6 +85,16 @@ form.addEventListener("submit", async (event) => {
         }
 
         // Remove Thinking...
+        console.log("LAST MESSAGE:", lastMessage);
+        console.log(
+            "CONTENT:",
+            lastMessage?.querySelector(".message-content")?.textContent
+        );
+        console.log(
+            "IS AI:",
+            lastMessage?.classList.contains("ai")
+        );
+
         const messages = chat.querySelectorAll(".message");
         const lastMessage = messages[messages.length - 1];
 
