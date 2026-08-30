@@ -3,6 +3,9 @@ const input = document.getElementById("prompt");
 const chat = document.getElementById("chat");
 const welcome = document.getElementById("welcome");
 
+// Conversation memory
+const conversation = [];
+
 function addMessage(sender, text) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
@@ -29,7 +32,14 @@ form.addEventListener("submit", async (event) => {
 
     if (!message) return;
 
+    // Show user's message
     addMessage("user", message);
+
+    // Save user message
+    conversation.push({
+        role: "user",
+        content: message
+    });
 
     input.value = "";
     input.disabled = true;
@@ -47,11 +57,10 @@ form.addEventListener("submit", async (event) => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: message
+                conversation: conversation
             })
         });
 
-        // Get the response as text first
         const rawText = await result.text();
 
         let data;
@@ -77,11 +86,20 @@ form.addEventListener("submit", async (event) => {
         }
 
         if (data.response) {
+
+            // Save AI response
+            conversation.push({
+                role: "assistant",
+                content: data.response
+            });
+
             addMessage("ai", data.response);
+
         } else {
             addMessage(
                 "ai",
-                "ByteLabs error: " + (data.error || `Server error ${result.status}`)
+                "ByteLabs error: " +
+                (data.error || `Server error ${result.status}`)
             );
         }
 
@@ -99,7 +117,10 @@ form.addEventListener("submit", async (event) => {
             lastMessage.remove();
         }
 
-        addMessage("ai", "Couldn't connect to ByteLabs: " + error.message);
+        addMessage(
+            "ai",
+            "Couldn't connect to ByteLabs: " + error.message
+        );
 
     } finally {
         console.log("FINALLY RAN");

@@ -1,4 +1,5 @@
-// this is node 
+// This is Node
+
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
@@ -13,12 +14,12 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-// Serve your HTML, CSS and frontend JS
+// Serve HTML, CSS and frontend JS
 app.use(express.static(__dirname));
 
 app.use(express.json());
 
-// ByteLabs
+// ByteLabs - Groq
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY
 });
@@ -27,22 +28,17 @@ app.use("/AI_web", express.static(path.join(__dirname, "bytelabs")));
 
 app.post("/AI_web/ask", async (req, res) => {
     try {
-        const message = req.body.message;
+        const conversation = req.body.conversation;
 
-        if (!message) {
+        if (!conversation || conversation.length === 0) {
             return res.status(400).json({
-                error: "No message provided."
+                error: "No conversation provided."
             });
         }
 
         const response = await groq.chat.completions.create({
             model: "openai/gpt-oss-20b",
-            messages: [
-                {
-                    role: "user",
-                    content: message
-                }
-            ]
+            messages: conversation
         });
 
         res.json({
@@ -57,6 +53,7 @@ app.post("/AI_web/ask", async (req, res) => {
         });
     }
 });
+
 // Start server
 const PORT = process.env.PORT || 3000;
 
