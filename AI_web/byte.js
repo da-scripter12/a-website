@@ -18,7 +18,10 @@ function addMessage(sender, text) {
     content.className = "message-content";
 
     if (sender === "ai") {
-        const rawHtml = marked.parse(text);
+        const cleanMarkdown = text.replace(/\\([\\`*_[\]{}()#+.!-])/g, "$1");
+
+        const rawHtml = marked.parse(cleanMarkdown);
+
         content.innerHTML = DOMPurify.sanitize(rawHtml);
     } else {
         content.textContent = text;
