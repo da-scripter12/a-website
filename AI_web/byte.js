@@ -6,7 +6,6 @@ const welcome = document.getElementById("welcome");
 // Conversation memory
 const conversation = [];
 
-
 function addMessage(sender, text) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
@@ -21,19 +20,22 @@ function addMessage(sender, text) {
     if (sender === "ai") {
         const cleanMarkdown = text
             .replace(/\\([\\`*_[\]{}()#+.!-])/g, "$1")
-            .replace(/<br\s*\/?>/gi, "\n");
+            .replace(/(<br\s*\/?>\s*)/gi, "\n");
 
         const rawHtml = marked.parse(cleanMarkdown);
-
         content.innerHTML = DOMPurify.sanitize(rawHtml);
     } else {
         content.textContent = text;
     }
+
     message.appendChild(name);
     message.appendChild(content);
     chat.appendChild(message);
 
     chat.scrollTop = chat.scrollHeight;
+
+    // Return the message so we can remove it later
+    return message;
 }
 
 form.addEventListener("submit", async (event) => {
@@ -59,7 +61,8 @@ form.addEventListener("submit", async (event) => {
         welcome.style.display = "none";
     }
 
-    addMessage("ai", "Thinking...");
+    // Show thinking message and keep a reference to it
+    const thinkingMessage = addMessage("ai", "Thinking...");
 
     try {
         const result = await fetch("/AI_web/ask", {
@@ -85,29 +88,9 @@ form.addEventListener("submit", async (event) => {
         }
 
         // Remove Thinking...
-        console.log("LAST MESSAGE:", lastMessage);
-        console.log(
-            "CONTENT:",
-            lastMessage?.querySelector(".message-content")?.textContent
-        );
-        console.log(
-            "IS AI:",
-            lastMessage?.classList.contains("ai")
-        );
-
-        const messages = chat.querySelectorAll(".message");
-        const lastMessage = messages[messages.length - 1];
-
-        if (
-            lastMessage &&
-            lastMessage.classList.contains("ai") &&
-            lastMessage.querySelector(".message-content")?.textContent === "Thinking..."
-        ) {
-            lastMessage.remove();
-        }
+        thinkingMessage.remove();
 
         if (data.response) {
-
             // Save AI response
             conversation.push({
                 role: "assistant",
@@ -115,7 +98,6 @@ form.addEventListener("submit", async (event) => {
             });
 
             addMessage("ai", data.response);
-
         } else {
             addMessage(
                 "ai",
@@ -127,16 +109,8 @@ form.addEventListener("submit", async (event) => {
     } catch (error) {
         console.error("ByteLabs error:", error);
 
-        const messages = chat.querySelectorAll(".message");
-        const lastMessage = messages[messages.length - 1];
-
-        if (
-            lastMessage &&
-            lastMessage.classList.contains("ai") &&
-            lastMessage.querySelector(".message-content")?.textContent === "Thinking..."
-        ) {
-            lastMessage.remove();
-        }
+        // Remove Thinking... if it still exists
+        thinkingMessage.remove();
 
         addMessage(
             "ai",
@@ -144,7 +118,6 @@ form.addEventListener("submit", async (event) => {
         );
 
     } finally {
-        console.log("FINALLY RAN");
         input.disabled = false;
         input.focus();
     }
