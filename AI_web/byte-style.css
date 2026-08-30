@@ -124,7 +124,6 @@ body {
     color: #ececec;
 }
 
-
 /* USER MESSAGE */
 
 .message.user {
@@ -232,7 +231,7 @@ body {
     cursor: pointer;
 
     transition: transform 0.15s ease,
-                opacity 0.15s ease;
+        opacity 0.15s ease;
 }
 
 #send-button:hover {
@@ -293,4 +292,12 @@ body {
         width: calc(100% - 20px);
     }
 
+}
+
+.message-content p {
+    margin: 0;
+}
+
+.message-content p+p {
+    margin-top: 8px;
 }

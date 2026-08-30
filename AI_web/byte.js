@@ -6,11 +6,6 @@ const welcome = document.getElementById("welcome");
 // Conversation memory
 const conversation = [];
 
-const markedKatex = markedKatexExtension({
-    throwOnError: false
-});
-
-marked.use(markedKatex);
 
 function addMessage(sender, text) {
     const message = document.createElement("div");
@@ -24,7 +19,9 @@ function addMessage(sender, text) {
     content.className = "message-content";
 
     if (sender === "ai") {
-        const cleanMarkdown = text.replace(/\\([\\`*_[\]{}()#+.!-])/g, "$1");
+        const cleanMarkdown = text
+            .replace(/\\([\\`*_[\]{}()#+.!-])/g, "$1")
+            .replace(/<br\s*\/?>/gi, "\n");
 
         const rawHtml = marked.parse(cleanMarkdown);
 
