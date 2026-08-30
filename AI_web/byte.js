@@ -6,6 +6,12 @@ const welcome = document.getElementById("welcome");
 // Conversation memory
 const conversation = [];
 
+const markedKatex = markedKatexExtension({
+    throwOnError: false
+});
+
+marked.use(markedKatex);
+
 function addMessage(sender, text) {
     const message = document.createElement("div");
     message.className = `message ${sender}`;
