@@ -16,8 +16,13 @@ function addMessage(sender, text) {
 
     const content = document.createElement("div");
     content.className = "message-content";
-    content.textContent = text;
 
+    if (sender === "ai") {
+        const rawHtml = marked.parse(text);
+        content.innerHTML = DOMPurify.sanitize(rawHtml);
+    } else {
+        content.textContent = text;
+    }
     message.appendChild(name);
     message.appendChild(content);
     chat.appendChild(message);
