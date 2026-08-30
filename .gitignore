@@ -1,5 +1,5 @@
 users.db
-node_modules
+AI_web/node_modules
 notes.txt
 .env
-AI_web/node_modules
+node_modules

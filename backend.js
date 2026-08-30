@@ -2,7 +2,7 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
-const { GoogleGenAI } = require("@google/genai");
+const Groq = require("groq-sdk");
 
 dotenv.config();
 
@@ -19,8 +19,8 @@ app.use(express.static(__dirname));
 app.use(express.json());
 
 // ByteLabs
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY
 });
 
 app.use("/AI_web", express.static(path.join(__dirname, "bytelabs")));
@@ -35,55 +35,28 @@ app.post("/AI_web/ask", async (req, res) => {
             });
         }
 
-        let response;
-
-        // Try up to 3 times
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-                response = await ai.models.generateContent({
-                    model: "gemini-3.6-flash",
-                    contents: message
-                });
-
-                break; // Success
-            } catch (error) {
-                console.error(`Gemini attempt ${attempt} failed:`, error);
-
-                const errorText = JSON.stringify(error);
-
-                // Only retry temporary/unavailable errors
-                if (
-                    !errorText.includes("503") &&
-                    !errorText.includes("UNAVAILABLE")
-                ) {
-                    throw error;
+        const response = await groq.chat.completions.create({
+            model: "openai/gpt-oss-20b",
+            messages: [
+                {
+                    role: "user",
+                    content: message
                 }
-
-                // If this was the final attempt, stop
-                if (attempt === 3) {
-                    return res.status(503).json({
-                        error: "ByteLabs is temporarily busy. Please try again in a few seconds."
-                    });
-                }
-
-                // Wait 2 seconds, then try again
-                await new Promise(resolve => setTimeout(resolve, 2000));
-            }
-        }
+            ]
+        });
 
         res.json({
-            response: response.text
+            response: response.choices[0].message.content
         });
 
     } catch (error) {
-        console.error("Gemini error:", error);
+        console.error("Groq error:", error);
 
         res.status(500).json({
-            error: error.message
+            error: "ByteLabs couldn't get a response right now."
         });
     }
 });
-
 // Start server
 const PORT = process.env.PORT || 3000;
 
