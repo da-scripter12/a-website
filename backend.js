@@ -38,9 +38,14 @@ app.post("/AI_web/ask", async (req, res) => {
 
         const response = await groq.chat.completions.create({
             model: "openai/gpt-oss-20b",
-            messages: conversation
+            messages: [
+                {
+                    role: "system",
+                    content: "You are ByteLabs, an AI assistant created for the ByteLabs website. Your name is ByteLabs. Never claim to be ChatGPT. If asked who you are, say you are ByteLabs."
+                },
+                ...conversation
+            ]
         });
-
         res.json({
             response: response.choices[0].message.content
         });
